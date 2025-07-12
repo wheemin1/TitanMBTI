@@ -84,16 +84,21 @@ export function useQuiz() {
   const submitQuiz = useCallback(async () => {
     // Filter out undefined answers
     const completeAnswers = answers.filter((answer): answer is number => answer !== undefined);
-    
+
     if (completeAnswers.length !== questions.length) {
-      throw new Error("모든 질문에 답해주세요.");
+      return alert("모든 질문에 답해주세요.");
     }
 
     const sessionId = generateSessionId();
-    return submitMutation.mutateAsync({ 
-      answers: completeAnswers, 
-      sessionId 
-    });
+    try {
+        await submitMutation.mutateAsync({
+            answers: completeAnswers,
+            sessionId
+        });
+    } catch (error) {
+        console.error("Failed to submit quiz:", error);
+        alert("퀴즈 제출에 실패했습니다.");
+    }
   }, [answers, submitMutation]);
 
   const resetQuiz = useCallback(() => {

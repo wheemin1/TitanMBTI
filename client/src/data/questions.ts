@@ -39,8 +39,7 @@ export const questions = [
   "에르디아와 마레의 역사적 갈등은 대화로 해결할 수 있다고 믿는다.",
   "마레의 전사 프로그램은 체계적이고 효율적인 시스템이라고 평가한다.",
   "거인의 비밀을 파헤치는 과정에서 호기심이 두려움을 압도했을 것이다.",
-  "라이너와 베르톨트의 정체가 밝혀졌을 때, 배신감보다는 복잡한 심정이었다.",
-  "가족과 동료 사이에서 선택해야 한다면, 가족을 우선시할 것이다."
+  "라이너와 베르톨트의 정체가 밝혀졌을 때, 배신감보다는 복잡한 심정이었다."
 ];
 
 // Question mapping to MBTI dimensions
@@ -84,7 +83,5 @@ export const questionMappings = [
   { dimension: 'J', reverse: false }, // 37 - J
   { dimension: 'F', reverse: false }, // 38 - F/N
   { dimension: 'T', reverse: false }, // 39 - T/J
-  { dimension: 'N', reverse: false }, // 40 - N/P
-  { dimension: 'F', reverse: false }, // 41 - F/N
-  { dimension: 'F', reverse: false }, // 42 - F
+  { dimension: 'F', reverse: false }, // 40 - F/N
 ];
