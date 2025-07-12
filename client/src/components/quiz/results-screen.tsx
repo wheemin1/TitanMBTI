@@ -96,7 +96,7 @@ export function ResultsScreen({ result, onRestart, isLoading }: ResultsScreenPro
           <CardContent className="p-8">
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-aot-dark mb-2">
-                당신의 성격 유형은:
+                당신의 진격의 거인 MBTI는 {result.mbtiType}입니다
               </h2>
               <div className="bg-gradient-to-r from-aot-green to-aot-teal text-white rounded-2xl p-6 mb-6">
                 <div className="text-5xl font-bold mb-2">
