@@ -25,7 +25,7 @@ export function StartScreen({ onStart }: StartScreenProps) {
           </h2>
           
           <p className="text-gray-600 mb-6 leading-relaxed">
-            40개의 질문을 통해 당신의 성격 유형을 분석하고,<br />
+            41개의 질문을 통해 당신의 성격 유형을 분석하고,<br />
             어떤 진격의 거인 캐릭터와 가장 닮았는지 알아보세요!
           </p>
           
@@ -44,7 +44,7 @@ export function StartScreen({ onStart }: StartScreenProps) {
               <span className="font-medium">⏱️ 약 5분 소요</span>
             </div>
             <div className="flex items-center justify-center p-3 bg-gray-50 rounded-lg">
-              <span className="font-medium">📝 40개 질문</span>
+              <span className="font-medium">📝 41개 질문</span>
             </div>
             <div className="flex items-center justify-center p-3 bg-gray-50 rounded-lg">
               <span className="font-medium">🎯 캐릭터 매칭</span>

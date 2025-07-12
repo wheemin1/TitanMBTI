@@ -94,10 +94,10 @@ export function ResultsScreen({ result, onRestart, isLoading }: ResultsScreenPro
                 당신의 진격의 거인 MBTI는 <span className="text-aot-green">{result.mbtiType}</span>입니다
               </h2>
               <div className="bg-gradient-to-br from-aot-green via-aot-teal to-blue-600 text-white rounded-3xl p-8 mb-8 shadow-lg">
-                <div className="text-6xl font-bold mb-3 drop-shadow-lg">
+                <div className="text-6xl font-bold mb-3 drop-shadow-lg text-white">
                   {result.mbtiType}
                 </div>
-                <div className="text-2xl font-semibold opacity-95">
+                <div className="text-2xl font-semibold opacity-95 text-white">
                   {result.character.title}
                 </div>
               </div>
@@ -120,7 +120,7 @@ export function ResultsScreen({ result, onRestart, isLoading }: ResultsScreenPro
                   {result.character.traits.map((trait, index) => (
                     <span
                       key={index}
-                      className="px-4 py-2 bg-gradient-to-r from-aot-teal to-aot-green text-white rounded-full text-sm font-medium shadow-md"
+                      className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full text-sm font-medium shadow-lg border border-blue-300"
                     >
                       {trait}
                     </span>
