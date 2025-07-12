@@ -1,0 +1,106 @@
+아래는 ‘진격의 거인 MBTI 팬‑테스트’ 웹앱을 최소기능제품(MVP)으로 출시할 때 필요한 **서비스 개요**입니다.
+요약하면, 5점 Likert 응답을 탭하면 부드럽게 다음 문항으로 스크롤되어 흐름이 끊기지 않고, 언제든 위로 돌아가 답변을 고칠 수 있으며, 진행도·남은 문항·총 4축 점수를 실시간으로 확인할 수 있는 **단일‑페이지(One‑Page) 퀴즈** 구조입니다.
+
+---
+
+## 1. 서비스 콘셉트
+
+* **목적**: 〈진격의 거인〉 캐릭터·서사에 기반한 50문항 MBTI 테스트 제공
+* **포지셔닝**: 공식 MBTI®가 아닌 **팬‑엔터테인먼트용**∙SNS 공유형 성향 테스트
+* **타깃**: 애니·웹툰 시청자 + 밈 문화에 익숙한 Z세대 (모바일 사용 비율 ↑)
+
+---
+
+## 2. 핵심 사용자 흐름
+
+1. **시작 화면**
+
+   * 간략한 주의(비공식·오락용), ‘시작하기’ 버튼, 데이터‑수집 Opt‑in.
+2. **문항 페이지(One‑Page Survey)**
+
+   * 5점 Likert 버튼(①\~⑤) 세로형 배열. 5점 척도는 인지 부하가 적고 신뢰성도 확보된 대표 UI 패턴 ([Nielsen Norman Group][1])
+   * **Smooth Scroll**: 선택 즉시 `scrollIntoView({behavior:'smooth'})`로 다음 문항 블록으로 이동 ([DEV Community][2])
+   * **진행도 바**(상단 고정): 응답 1개마다 % 업데이트. 간결·일관된 디자인이 이탈률을 낮춘다 ([UX Planet][3], [uxdworld.com][4])
+   * **‘뒤로 가기’ 토글**: 위 스와이프·화살표 클릭으로 이전 답변 수정 허용. 수정 가능 설계가 설문 신뢰도를 높인다 ([SurveyMonkey][5])
+   * **문항 번호/총 문항**+**남은 시간 추정치**: 조기 포기를 줄이는 심리적 피드백 ([PMC][6])
+3. **결과 화면**
+
+   * 4‑축 점수·최종 유형(예: ENTJ)∙〈진격거〉 캐릭터 대응표·해석 카드
+   * **SNS 공유**(이미지·URL): 바이럴 유입의 핵심 — 퀴즈 결과 공유가 트래픽을 증폭한다 ([ScoreApp][7], [가디언][8])
+
+---
+
+## 3. 세부 기능
+
+### 3.1 질문·네비게이션
+
+| 기능            | 설명                             | 참고 근거                                              |
+| ------------- | ------------------------------ | -------------------------------------------------- |
+| 5‑점 Likert 입력 | 라디오 버튼·세로형·터치 Hit‑area ≥ 44 px | Likert UI 가이드 ([Nielsen Norman Group][1])          |
+| 부드러운 다음‑문항 이동 | 선택 이벤트→Ref scroll API          | Smooth UX ([DEV Community][2])                     |
+| 응답 수정 허용      | 상단 ‘이전’ 버튼 + 인디케이터 점           | 설문 편집 가이드 ([SurveyMonkey][5])                      |
+| 진행도 바         | %·남은 문항·색상 변화                  | 진행도 효과 연구 ([UX Planet][3], [PMC][6])               |
+| 단계적 정보 노출     | FAQ·저작권·개인정보는 more 버튼          | Progressive Disclosure ([Nielsen Norman Group][9]) |
+
+### 3.2 결과·공유
+
+* **유형 카드**: MBTI 4글자 + 〈진격거〉 대응 캐릭터·설명 1줄
+* **SNS OG 이미지**: 링크 카드 썸네일 자동 생성 (Twitter/X, Kakao, Instagram Story)
+* **익명 통계**: 집계 데이터(축별 평균) 대시보드 → 서비스 개선에 활용
+
+### 3.3 접근성·글로벌
+
+* ARIA role='radiogroup'로 키보드 네비 지원 ([DEV Community][2])
+* 색약 대비 진행도 색상·텍스트 병행
+* 다국어 리소스 분리(ko/en 등)
+
+### 3.4 개인정보·법적
+
+| 이슈           | 대응                                    |
+| ------------ | ------------------------------------- |
+| 데이터 최소 수집    | 이메일/로그인 없이 기기 LocalStorage + 서버 익명 ID |
+| GDPR/개인정보 고지 | “엔터테인먼트용·광고 목적 수집 없음” 명시 ([TIME][10]) |
+| 저작권          | 작품명·이미지 비사용, 텍스트만 인용 (Fair Use)       |
+
+---
+
+## 4. 기술 스택 (MVP)
+
+| 계층        | 선택안                                                          |
+| --------- | ------------------------------------------------------------ |
+| Front‑end | React + Next.js (Static Export), TailwindCSS                 |
+| State     | Zustand / Context for answers; URL hash state for share‑link |
+| Animation | Framer‑Motion(버튼 Fade ↗ Scroll)                              |
+| Back‑end  | Serverless (API Routes) for scoring, Vercel 배포               |
+| DB        | PlanetScale(MySQL) / Supabase (pooled)                       |
+| Analytics | Plausible 또는 Fathom (EU 서버) – 이벤트: start, finish, share      |
+
+---
+
+## 5. 향후 로드맵
+
+1. **v1.1** – 점수 CSV Export∙다운로드, 다국어(EN/JP).
+2. **v1.2** – 사용자 유형별 **랭킹 / 분포 그래프** 제공, 캐릭터 대표 대사 랜덤 출력.
+3. **v2.0** – **로그인·즐겨찾기** + 시즌별 ’테마 퀴즈’(예: 수험생·직장인) 모듈화.
+
+---
+
+### 요약 정리
+
+* **단일‑페이지** + **부드러운 문항 전환**으로 몰입 유지.
+* **진행도 바**·응답 수정 기능으로 이탈률↓ 신뢰도↑.
+* **결과‑공유 카드**는 SNS 바이럴 핵심, 퀴즈 트래픽 증폭 입증 ([가디언][8]).
+* ARIA∙GDPR∙저작권 준수로 신뢰 확보.
+
+이 구성을 그대로 프론트엔드 설계서·기획안에 옮기면 MVP 제작 일정(👉 2–3주 스프린트)까지 바로 산출할 수 있을 거예요. 추가 세부 설계나 코드 샘플이 필요하면 알려 주세요!
+
+[1]: https://www.nngroup.com/articles/rating-scales/?utm_source=chatgpt.com "Rating Scales in UX Research: Likert or Semantic Differential? - NN/g"
+[2]: https://dev.to/unegbuclinton/implementing-smooth-scrolling-for-a-better-user-experience-3819?utm_source=chatgpt.com "Implementing Smooth Scrolling for a Better User Experience."
+[3]: https://uxplanet.org/progress-bar-design-best-practices-526f4d0a3c30?utm_source=chatgpt.com "Progress Bar Design Best Practices | by uxplanet.org"
+[4]: https://uxdworld.com/ux-design-of-creative-progress-indicators-with-examples/?utm_source=chatgpt.com "Best Practices for Designing Progress Indicators - UX World"
+[5]: https://help.surveymonkey.com/en/surveymonkey/send/editing-survey-responses/?utm_source=chatgpt.com "Editing Survey Responses - SurveyMonkey Help"
+[6]: https://pmc.ncbi.nlm.nih.gov/articles/PMC2910434/?utm_source=chatgpt.com "The impact of progress indicators on task completion - PMC"
+[7]: https://www.scoreapp.com/social-media-quiz-promotion/?utm_source=chatgpt.com "Using Quizzes in Social Media Marketing: A Step-by-Step Guide"
+[8]: https://www.theguardian.com/media/2013/oct/30/daily-mail-quiz-usvsth3m-users-mirror-buzzfeed?utm_source=chatgpt.com "Daily Mail quiz powers UsvsTh3m towards 3m users"
+[9]: https://www.nngroup.com/articles/progressive-disclosure/?utm_source=chatgpt.com "Progressive Disclosure - NN/g"
+[10]: https://time.com/4126945/facebook-most-used-words-vonvon/?utm_source=chatgpt.com "Think Twice Before Using This Wildly Popular Facebook App"
