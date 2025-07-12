@@ -94,10 +94,10 @@ export function ResultsScreen({ result, onRestart, isLoading }: ResultsScreenPro
                 당신의 진격의 거인 MBTI는 <span className="text-aot-green">{result.mbtiType}</span>입니다
               </h2>
               <div className="bg-gradient-to-br from-aot-green via-aot-teal to-blue-600 text-white rounded-3xl p-8 mb-8 shadow-lg">
-                <div className="text-6xl font-bold mb-3 drop-shadow-lg text-white">
+                <div className="text-6xl font-bold mb-3 drop-shadow-lg text-gray-900 bg-white bg-opacity-90 rounded-2xl py-4 px-6 inline-block">
                   {result.mbtiType}
                 </div>
-                <div className="text-2xl font-semibold opacity-95 text-white">
+                <div className="text-2xl font-semibold text-white">
                   {result.character.title}
                 </div>
               </div>
