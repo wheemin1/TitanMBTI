@@ -1,3 +1,6 @@
+import type { Character } from '../types/character';
+import { characterImages } from './character-images';
+
 export interface Character {
   name: string;
   mbtiType: string;
@@ -155,11 +158,10 @@ export const characters: Record<string, Character> = {
   }
 };
 
-export function getCharacterMatch(mbtiType: string): Character {
-  const character = characters[mbtiType];
-  if (!character) {
-    // Default fallback
-    return characters.ISTJ;
-  }
-  return character;
-}
+export const getCharacterMatch = (mbtiType: string): Character => {
+  const character = characters[mbtiType as keyof typeof characters] || characters.INFJ;
+  return {
+    ...character,
+    imageUrl: characterImages[mbtiType as keyof typeof characterImages] || character.imageUrl
+  };
+};

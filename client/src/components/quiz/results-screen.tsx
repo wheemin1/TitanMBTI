@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { motion } from "framer-motion";
-import { Share2, Twitter, Link, RefreshCw } from "lucide-react";
+import { Share2, Link, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ResultsScreenProps {
@@ -47,21 +47,16 @@ export function ResultsScreen({ result, onRestart, isLoading }: ResultsScreenPro
     P: calculatePercentage(result.scores.P, result.scores.J),
   };
 
-  const handleShare = async (platform: string) => {
+  const handleShare = async () => {
     const shareText = `진격의 거인 MBTI 테스트 결과: ${result.mbtiType} - ${result.character.name}`;
     const shareUrl = `${window.location.origin}/result/${result.sessionId}`;
 
     try {
-      if (platform === 'twitter') {
-        const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
-        window.open(twitterUrl, '_blank');
-      } else if (platform === 'copy') {
-        await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
-        toast({
-          title: "링크가 복사되었습니다!",
-          description: "클립보드에 결과 링크가 복사되었습니다.",
-        });
-      }
+      await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+      toast({
+        title: "링크가 복사되었습니다!",
+        description: "클립보드에 결과 링크가 복사되었습니다.",
+      });
     } catch (error) {
       toast({
         title: "공유 실패",
@@ -92,40 +87,40 @@ export function ResultsScreen({ result, onRestart, isLoading }: ResultsScreenPro
         transition={{ duration: 0.8 }}
         className="result-card"
       >
-        <Card className="shadow-xl">
-          <CardContent className="p-8">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-aot-dark mb-2">
-                당신의 진격의 거인 MBTI는 {result.mbtiType}입니다
+        <Card className="shadow-2xl border-2 border-gray-200">
+          <CardContent className="p-10">
+            <div className="text-center mb-10">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                당신의 진격의 거인 MBTI는 <span className="text-aot-green">{result.mbtiType}</span>입니다
               </h2>
-              <div className="bg-gradient-to-r from-aot-green to-aot-teal text-white rounded-2xl p-6 mb-6">
-                <div className="text-5xl font-bold mb-2">
+              <div className="bg-gradient-to-br from-aot-green via-aot-teal to-blue-600 text-white rounded-3xl p-8 mb-8 shadow-lg">
+                <div className="text-6xl font-bold mb-3 drop-shadow-lg">
                   {result.mbtiType}
                 </div>
-                <div className="text-xl font-semibold">
+                <div className="text-2xl font-semibold opacity-95">
                   {result.character.title}
                 </div>
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8 mb-8">
-              <div className="text-center">
+            <div className="grid md:grid-cols-2 gap-10 mb-10">
+              <div className="text-center bg-gray-50 rounded-2xl p-6 border border-gray-200">
                 <img 
                   src={result.character.imageUrl} 
                   alt={result.character.name}
-                  className="w-48 h-48 object-cover rounded-full mx-auto mb-4 shadow-lg"
+                  className="w-56 h-56 object-cover rounded-2xl mx-auto mb-6 shadow-xl border-4 border-white"
                 />
-                <h3 className="text-2xl font-bold text-aot-dark mb-2">
+                <h3 className="text-3xl font-bold text-gray-900 mb-3">
                   {result.character.name}
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-gray-700 mb-6 text-lg leading-relaxed">
                   {result.character.description}
                 </p>
-                <div className="flex flex-wrap gap-2 justify-center">
+                <div className="flex flex-wrap gap-3 justify-center">
                   {result.character.traits.map((trait, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 bg-aot-teal text-white rounded-full text-sm"
+                      className="px-4 py-2 bg-gradient-to-r from-aot-teal to-aot-green text-white rounded-full text-sm font-medium shadow-md"
                     >
                       {trait}
                     </span>
@@ -133,50 +128,50 @@ export function ResultsScreen({ result, onRestart, isLoading }: ResultsScreenPro
                 </div>
               </div>
               
-              <div className="space-y-4">
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="font-semibold text-aot-dark">마음</span>
-                    <span className="text-sm text-gray-600">{percentages.E}%</span>
+              <div className="space-y-6">
+                <div className="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-lg">
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="font-bold text-gray-900 text-lg">마음</span>
+                    <span className="text-lg font-semibold text-aot-green">{percentages.E}%</span>
                   </div>
-                  <Progress value={percentages.E} className="mb-2" />
-                  <div className="flex justify-between text-xs text-gray-500">
+                  <Progress value={percentages.E} className="mb-3 h-3" />
+                  <div className="flex justify-between text-sm font-medium text-gray-600">
                     <span>외향형</span>
                     <span>내향형</span>
                   </div>
                 </div>
                 
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="font-semibold text-aot-dark">에너지</span>
-                    <span className="text-sm text-gray-600">{percentages.N}%</span>
+                <div className="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-lg">
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="font-bold text-gray-900 text-lg">에너지</span>
+                    <span className="text-lg font-semibold text-aot-green">{percentages.N}%</span>
                   </div>
-                  <Progress value={percentages.N} className="mb-2" />
-                  <div className="flex justify-between text-xs text-gray-500">
+                  <Progress value={percentages.N} className="mb-3 h-3" />
+                  <div className="flex justify-between text-sm font-medium text-gray-600">
                     <span>직관형</span>
                     <span>현실형</span>
                   </div>
                 </div>
                 
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="font-semibold text-aot-dark">본성</span>
-                    <span className="text-sm text-gray-600">{percentages.F}%</span>
+                <div className="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-lg">
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="font-bold text-gray-900 text-lg">본성</span>
+                    <span className="text-lg font-semibold text-aot-green">{percentages.F}%</span>
                   </div>
-                  <Progress value={percentages.F} className="mb-2" />
-                  <div className="flex justify-between text-xs text-gray-500">
+                  <Progress value={percentages.F} className="mb-3 h-3" />
+                  <div className="flex justify-between text-sm font-medium text-gray-600">
                     <span>감정형</span>
                     <span>사고형</span>
                   </div>
                 </div>
                 
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="font-semibold text-aot-dark">전술</span>
-                    <span className="text-sm text-gray-600">{percentages.P}%</span>
+                <div className="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-lg">
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="font-bold text-gray-900 text-lg">전술</span>
+                    <span className="text-lg font-semibold text-aot-green">{percentages.P}%</span>
                   </div>
-                  <Progress value={percentages.P} className="mb-2" />
-                  <div className="flex justify-between text-xs text-gray-500">
+                  <Progress value={percentages.P} className="mb-3 h-3" />
+                  <div className="flex justify-between text-sm font-medium text-gray-600">
                     <span>인식형</span>
                     <span>판단형</span>
                   </div>
@@ -184,33 +179,31 @@ export function ResultsScreen({ result, onRestart, isLoading }: ResultsScreenPro
               </div>
             </div>
 
-            <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6 mb-6">
-              <h4 className="text-xl font-bold text-aot-dark mb-3">성격 분석</h4>
-              <p className="text-gray-700 leading-relaxed">
+            <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-8 mb-8 border-2 border-blue-100 shadow-lg">
+              <h4 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                <span className="mr-3 text-2xl">📊</span>
+                성격 분석
+              </h4>
+              <p className="text-gray-800 leading-relaxed text-lg">
                 {result.character.analysis}
               </p>
             </div>
 
             <div className="flex flex-wrap gap-4 justify-center">
               <Button 
-                onClick={() => handleShare('twitter')}
-                className="bg-blue-500 hover:bg-blue-600 text-white"
+                onClick={handleShare}
+                className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 text-lg"
+                size="lg"
               >
-                <Twitter className="w-4 h-4 mr-2" />
-                트위터 공유
-              </Button>
-              <Button 
-                onClick={() => handleShare('copy')}
-                className="bg-green-500 hover:bg-green-600 text-white"
-              >
-                <Link className="w-4 h-4 mr-2" />
+                <Link className="w-5 h-5 mr-2" />
                 링크 복사
               </Button>
               <Button 
                 onClick={onRestart}
-                className="bg-aot-green hover:bg-aot-green/90 text-white"
+                className="bg-aot-green hover:bg-aot-green/90 text-white px-6 py-3 text-lg"
+                size="lg"
               >
-                <RefreshCw className="w-4 h-4 mr-2" />
+                <RefreshCw className="w-5 h-5 mr-2" />
                 다시 테스트
               </Button>
             </div>
