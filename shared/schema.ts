@@ -38,7 +38,7 @@ export const insertQuizResultSchema = createInsertSchema(quizResults).omit({
 });
 
 export const quizAnswersSchema = z.object({
-  answers: z.array(z.number().min(1).max(5)).length(39),
+  answers: z.array(z.number().min(1).max(5)).length(40),
   sessionId: z.string(),
 });
 

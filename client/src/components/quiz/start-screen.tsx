@@ -17,9 +17,7 @@ export function StartScreen({ onStart }: StartScreenProps) {
               alt="Attack on Titan inspired landscape" 
               className="w-full h-48 object-cover rounded-xl"
             />
-            <div className="absolute inset-0 bg-black bg-opacity-30 rounded-xl flex items-center justify-center">
-              <h1 className="text-white text-2xl font-bold">진격의 거인</h1>
-            </div>
+            <div className="absolute inset-0 bg-black bg-opacity-30 rounded-xl"></div>
           </div>
           
           <h2 className="text-3xl font-bold text-aot-dark mb-4">
@@ -27,7 +25,7 @@ export function StartScreen({ onStart }: StartScreenProps) {
           </h2>
           
           <p className="text-gray-600 mb-6 leading-relaxed">
-            39개의 질문을 통해 당신의 성격 유형을 분석하고,<br />
+            40개의 질문을 통해 당신의 성격 유형을 분석하고,<br />
             어떤 진격의 거인 캐릭터와 가장 닮았는지 알아보세요!
           </p>
           
@@ -46,7 +44,7 @@ export function StartScreen({ onStart }: StartScreenProps) {
               <span className="font-medium">⏱️ 약 5분 소요</span>
             </div>
             <div className="flex items-center justify-center p-3 bg-gray-50 rounded-lg">
-              <span className="font-medium">📝 39개 질문</span>
+              <span className="font-medium">📝 40개 질문</span>
             </div>
             <div className="flex items-center justify-center p-3 bg-gray-50 rounded-lg">
               <span className="font-medium">🎯 캐릭터 매칭</span>

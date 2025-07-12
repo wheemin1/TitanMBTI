@@ -48,22 +48,31 @@ export function QuestionCard({
               <span>매우 그렇다</span>
             </div>
             
-            <div className="flex justify-center space-x-4">
-              {[1, 2, 3, 4, 5].map((value) => (
-                <Button
-                  key={value}
-                  variant="outline"
-                  className={cn(
-                    "likert-btn w-12 h-12 rounded-full border-2 font-semibold transition-all duration-200",
-                    selectedValue === value 
-                      ? "bg-aot-teal text-white border-aot-teal" 
-                      : "border-gray-300 hover:border-aot-teal hover:bg-aot-teal hover:text-white"
-                  )}
-                  onClick={() => onAnswer(questionIndex, value)}
-                >
-                  {value}
-                </Button>
-              ))}
+            <div className="flex justify-center items-center space-x-3">
+              {[1, 2, 3, 4, 5].map((value) => {
+                const getSize = (val: number) => {
+                  if (val === 1 || val === 5) return "w-16 h-16 text-lg";
+                  if (val === 2 || val === 4) return "w-14 h-14 text-base";
+                  return "w-12 h-12 text-sm";
+                };
+                
+                return (
+                  <Button
+                    key={value}
+                    variant="outline"
+                    className={cn(
+                      "likert-btn rounded-full border-2 font-semibold transition-all duration-200",
+                      getSize(value),
+                      selectedValue === value 
+                        ? "bg-aot-teal text-white border-aot-teal" 
+                        : "border-gray-300 hover:border-aot-teal hover:bg-aot-teal hover:text-white"
+                    )}
+                    onClick={() => onAnswer(questionIndex, value)}
+                  >
+                    {value}
+                  </Button>
+                );
+              })}
             </div>
             
             <div className="flex justify-center space-x-2 mt-4">

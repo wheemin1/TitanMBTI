@@ -55,8 +55,12 @@ export class MemStorage implements IStorage {
   async saveQuizResult(result: InsertQuizResult): Promise<QuizResult> {
     const id = this.currentQuizId++;
     const quizResult: QuizResult = {
-      ...result,
       id,
+      sessionId: result.sessionId,
+      answers: result.answers as number[],
+      mbtiType: result.mbtiType,
+      scores: result.scores,
+      characterMatch: result.characterMatch,
       completedAt: new Date(),
     };
     this.quizResults.set(result.sessionId, quizResult);

@@ -54,11 +54,12 @@ export function useQuiz() {
   }, []);
 
   const goToNext = useCallback(() => {
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(prev => prev + 1);
+    const nextIndex = currentQuestion + 1;
+    if (nextIndex < questions.length) {
+      setCurrentQuestion(nextIndex);
       // Smooth scroll to next question
       setTimeout(() => {
-        const nextQuestionElement = document.getElementById(`question-${currentQuestion + 1}`);
+        const nextQuestionElement = document.getElementById(`question-${nextIndex}`);
         if (nextQuestionElement) {
           nextQuestionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
@@ -67,11 +68,12 @@ export function useQuiz() {
   }, [currentQuestion]);
 
   const goToPrevious = useCallback(() => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(prev => prev - 1);
+    const prevIndex = currentQuestion - 1;
+    if (prevIndex >= 0) {
+      setCurrentQuestion(prevIndex);
       // Smooth scroll to previous question
       setTimeout(() => {
-        const prevQuestionElement = document.getElementById(`question-${currentQuestion - 1}`);
+        const prevQuestionElement = document.getElementById(`question-${prevIndex}`);
         if (prevQuestionElement) {
           prevQuestionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }

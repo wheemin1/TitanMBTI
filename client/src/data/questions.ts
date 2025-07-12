@@ -81,4 +81,5 @@ export const questionMappings = [
   { dimension: 'F', reverse: false }, // 37 - F (feeling)
   { dimension: 'T', reverse: false }, // 38 - T (thinking)
   { dimension: 'S', reverse: false }, // 39 - S (sensing)
+  { dimension: 'S', reverse: false }, // 40 - S (sensing)
 ];
