@@ -1,215 +1,299 @@
+
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { motion } from "framer-motion";
-import { Share2, Link, RefreshCw } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Badge } from "@/components/ui/badge";
+import { Share2, RotateCcw, Copy, Check } from "lucide-react";
+import { useState } from "react";
 
-interface ResultsScreenProps {
-  result: {
-    mbtiType: string;
-    scores: {
-      E: number;
-      I: number;
-      S: number;
-      N: number;
-      T: number;
-      F: number;
-      J: number;
-      P: number;
-    };
-    character: {
-      name: string;
-      title: string;
-      description: string;
-      analysis: string;
-      imageUrl: string;
-      traits: string[];
-    };
-    sessionId: string;
+interface QuizResult {
+  mbtiType: string;
+  scores: {
+    E: number;
+    I: number;
+    S: number;
+    N: number;
+    T: number;
+    F: number;
+    J: number;
+    P: number;
   };
-  onRestart: () => void;
-  isLoading: boolean;
+  character: {
+    name: string;
+    title: string;
+    description: string;
+    analysis: string;
+    imageUrl: string;
+    traits: string[];
+  };
+  sessionId: string;
 }
 
-export function ResultsScreen({ result, onRestart, isLoading }: ResultsScreenProps) {
-  const { toast } = useToast();
+interface ResultsScreenProps {
+  result: QuizResult;
+  onRestart: () => void;
+}
 
-  const calculatePercentage = (score1: number, score2: number) => {
-    const total = score1 + score2;
-    return Math.round((score1 / total) * 100);
-  };
-
-  const percentages = {
-    E: calculatePercentage(result.scores.E, result.scores.I),
-    N: calculatePercentage(result.scores.N, result.scores.S),
-    F: calculatePercentage(result.scores.F, result.scores.T),
-    P: calculatePercentage(result.scores.P, result.scores.J),
-  };
+export function ResultsScreen({ result, onRestart }: ResultsScreenProps) {
+  const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
-    const shareText = `진격의 거인 MBTI 테스트 결과: ${result.mbtiType} - ${result.character.name}`;
-    const shareUrl = `${window.location.origin}/result/${result.sessionId}`;
-
-    try {
-      await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
-      toast({
-        title: "링크가 복사되었습니다!",
-        description: "클립보드에 결과 링크가 복사되었습니다.",
-      });
-    } catch (error) {
-      toast({
-        title: "공유 실패",
-        description: "공유 중 오류가 발생했습니다.",
-        variant: "destructive",
-      });
+    const shareUrl = window.location.origin;
+    const shareText = `나는 ${result.character.name} (${result.mbtiType}) 타입이야! 🎯\n\n"${result.character.title}"\n\n진격의 거인 MBTI 테스트 해보기 👇`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: '진격의 거인 MBTI 테스트',
+          text: shareText,
+          url: shareUrl,
+        });
+      } catch (error) {
+        // 공유가 취소되거나 실패한 경우 클립보드로 복사
+        handleCopyUrl();
+      }
+    } else {
+      handleCopyUrl();
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="max-w-4xl mx-auto px-4 text-center">
-        <Card className="shadow-xl">
-          <CardContent className="p-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-aot-teal mx-auto mb-4"></div>
-            <p className="text-lg">결과를 분석하고 있습니다...</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  const handleCopyUrl = async () => {
+    try {
+      const shareUrl = window.location.origin;
+      const shareText = `나는 ${result.character.name} (${result.mbtiType}) 타입이야! 🎯\n\n"${result.character.title}"\n\n진격의 거인 MBTI 테스트 해보기 👇\n${shareUrl}`;
+      
+      await navigator.clipboard.writeText(shareText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error('클립보드 복사 실패:', error);
+    }
+  };
+
+  const getPercentage = (type: 'energy' | 'information' | 'decisions' | 'lifestyle') => {
+    switch (type) {
+      case 'energy':
+        return Math.round((result.scores.E / (result.scores.E + result.scores.I)) * 100);
+      case 'information':
+        return Math.round((result.scores.N / (result.scores.S + result.scores.N)) * 100);
+      case 'decisions':
+        return Math.round((result.scores.F / (result.scores.T + result.scores.F)) * 100);
+      case 'lifestyle':
+        return Math.round((result.scores.P / (result.scores.J + result.scores.P)) * 100);
+      default:
+        return 50;
+    }
+  };
 
   return (
-    <section className="max-w-4xl mx-auto px-4">
+    <div className="max-w-4xl mx-auto px-4">
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
         className="result-card"
       >
-        <Card className="shadow-2xl border-2 border-gray-200">
-          <CardContent className="p-10">
-            <div className="text-center mb-10">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4 leading-tight">
-                당신의 진격의 거인 MBTI는 <span className="text-aot-green">{result.mbtiType}</span>입니다
-              </h2>
-              <div className="bg-gradient-to-br from-aot-green via-aot-teal to-blue-600 text-white rounded-3xl p-8 mb-8 shadow-lg">
-                <div className="text-6xl font-bold mb-3 drop-shadow-lg text-gray-900 bg-white bg-opacity-90 rounded-2xl py-4 px-6 inline-block">
-                  {result.mbtiType}
-                </div>
-                <div className="text-2xl font-semibold text-white">
-                  {result.character.title}
-                </div>
-              </div>
-            </div>
+        {/* Header */}
+        <div className="text-center mb-8">
+          <motion.h1
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-aot-green to-aot-teal bg-clip-text text-transparent mb-4"
+          >
+            🎯 분석 완료!
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+            className="text-xl text-gray-600"
+          >
+            당신의 진격의 거인 캐릭터는...
+          </motion.p>
+        </div>
 
-            <div className="grid md:grid-cols-2 gap-10 mb-10">
-              <div className="text-center bg-gray-50 rounded-2xl p-6 border border-gray-200">
-                <img 
-                  src={result.character.imageUrl} 
-                  alt={result.character.name}
-                  className="w-56 h-56 object-cover rounded-2xl mx-auto mb-6 shadow-xl border-4 border-white"
-                />
-                <h3 className="text-3xl font-bold text-gray-900 mb-3">
-                  {result.character.name}
-                </h3>
-                <p className="text-gray-700 mb-6 text-lg leading-relaxed">
-                  {result.character.description}
-                </p>
-                <div className="flex flex-wrap gap-3 justify-center">
-                  {result.character.traits.map((trait, index) => (
-                    <span
-                      key={index}
-                      className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full text-sm font-medium shadow-lg border border-blue-300"
-                    >
-                      {trait}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="space-y-6">
-                <div className="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-lg">
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="font-bold text-gray-900 text-lg">마음</span>
-                    <span className="text-lg font-semibold text-aot-green">{percentages.E}%</span>
+        {/* Character Card */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.6, duration: 0.6 }}
+        >
+          <Card className="mb-8 overflow-hidden border-2 border-aot-teal/20 shadow-2xl">
+            <CardContent className="p-0">
+              <div className="bg-gradient-to-br from-aot-green/10 to-aot-teal/10 p-8">
+                <div className="flex flex-col md:flex-row items-center gap-8">
+                  <div className="flex-shrink-0">
+                    <div className="relative">
+                      <img
+                        src={result.character.imageUrl}
+                        alt={result.character.name}
+                        className="w-48 h-48 object-cover rounded-full border-4 border-white shadow-xl"
+                      />
+                      <Badge className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-aot-teal text-white text-lg px-4 py-1">
+                        {result.mbtiType}
+                      </Badge>
+                    </div>
                   </div>
-                  <Progress value={percentages.E} className="mb-3 h-3" />
-                  <div className="flex justify-between text-sm font-medium text-gray-600">
-                    <span>외향형</span>
-                    <span>내향형</span>
-                  </div>
-                </div>
-                
-                <div className="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-lg">
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="font-bold text-gray-900 text-lg">에너지</span>
-                    <span className="text-lg font-semibold text-aot-green">{percentages.N}%</span>
-                  </div>
-                  <Progress value={percentages.N} className="mb-3 h-3" />
-                  <div className="flex justify-between text-sm font-medium text-gray-600">
-                    <span>직관형</span>
-                    <span>현실형</span>
-                  </div>
-                </div>
-                
-                <div className="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-lg">
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="font-bold text-gray-900 text-lg">본성</span>
-                    <span className="text-lg font-semibold text-aot-green">{percentages.F}%</span>
-                  </div>
-                  <Progress value={percentages.F} className="mb-3 h-3" />
-                  <div className="flex justify-between text-sm font-medium text-gray-600">
-                    <span>감정형</span>
-                    <span>사고형</span>
-                  </div>
-                </div>
-                
-                <div className="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-lg">
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="font-bold text-gray-900 text-lg">전술</span>
-                    <span className="text-lg font-semibold text-aot-green">{percentages.P}%</span>
-                  </div>
-                  <Progress value={percentages.P} className="mb-3 h-3" />
-                  <div className="flex justify-between text-sm font-medium text-gray-600">
-                    <span>인식형</span>
-                    <span>판단형</span>
+                  
+                  <div className="flex-1 text-center md:text-left">
+                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                      {result.character.name}
+                    </h2>
+                    <p className="text-xl text-aot-teal font-semibold mb-4">
+                      {result.character.title}
+                    </p>
+                    <p className="text-gray-700 text-lg leading-relaxed mb-6">
+                      {result.character.description}
+                    </p>
+                    
+                    {/* Traits */}
+                    <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                      {result.character.traits.map((trait, index) => (
+                        <Badge key={index} variant="secondary" className="bg-aot-amber/20 text-aot-dark">
+                          {trait}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
-            <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-8 mb-8 border-2 border-blue-100 shadow-lg">
-              <h4 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                <span className="mr-3 text-2xl">📊</span>
-                성격 분석
-              </h4>
-              <p className="text-gray-800 leading-relaxed text-lg">
+        {/* Detailed Analysis */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.6 }}
+        >
+          <Card className="mb-8 border-2 border-aot-green/20">
+            <CardContent className="p-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+                📊 상세 성격 분석
+              </h3>
+              <p className="text-gray-700 text-lg leading-relaxed text-center">
                 {result.character.analysis}
               </p>
-            </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Button 
-                onClick={handleShare}
-                className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 text-lg"
-                size="lg"
-              >
-                <Link className="w-5 h-5 mr-2" />
+        {/* MBTI Scores */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.0, duration: 0.6 }}
+        >
+          <Card className="mb-8 border-2 border-aot-amber/20">
+            <CardContent className="p-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+                📈 성격 점수
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="font-semibold">외향성 (E)</span>
+                    <span className="text-aot-teal font-bold">{getPercentage('energy')}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-3">
+                    <div 
+                      className="bg-gradient-to-r from-aot-green to-aot-teal h-3 rounded-full transition-all duration-1000"
+                      style={{ width: `${getPercentage('energy')}%` }}
+                    ></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="font-semibold">직관성 (N)</span>
+                    <span className="text-aot-teal font-bold">{getPercentage('information')}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-3">
+                    <div 
+                      className="bg-gradient-to-r from-aot-green to-aot-teal h-3 rounded-full transition-all duration-1000"
+                      style={{ width: `${getPercentage('information')}%` }}
+                    ></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="font-semibold">감정형 (F)</span>
+                    <span className="text-aot-teal font-bold">{getPercentage('decisions')}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-3">
+                    <div 
+                      className="bg-gradient-to-r from-aot-green to-aot-teal h-3 rounded-full transition-all duration-1000"
+                      style={{ width: `${getPercentage('decisions')}%` }}
+                    ></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="font-semibold">인식형 (P)</span>
+                    <span className="text-aot-teal font-bold">{getPercentage('lifestyle')}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-3">
+                    <div 
+                      className="bg-gradient-to-r from-aot-green to-aot-teal h-3 rounded-full transition-all duration-1000"
+                      style={{ width: `${getPercentage('lifestyle')}%` }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Action Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 0.6 }}
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+        >
+          <Button
+            onClick={handleShare}
+            size="lg"
+            className="bg-gradient-to-r from-aot-green to-aot-teal hover:from-aot-green/90 hover:to-aot-teal/90 text-white font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+          >
+            <Share2 className="mr-2 h-5 w-5" />
+            결과 공유하기
+          </Button>
+          
+          <Button
+            onClick={handleCopyUrl}
+            variant="outline"
+            size="lg"
+            className="border-2 border-aot-teal text-aot-teal hover:bg-aot-teal hover:text-white font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105"
+          >
+            {copied ? (
+              <>
+                <Check className="mr-2 h-5 w-5" />
+                복사됨!
+              </>
+            ) : (
+              <>
+                <Copy className="mr-2 h-5 w-5" />
                 링크 복사
-              </Button>
-              <Button 
-                onClick={onRestart}
-                className="bg-aot-green hover:bg-aot-green/90 text-white px-6 py-3 text-lg"
-                size="lg"
-              >
-                <RefreshCw className="w-5 h-5 mr-2" />
-                다시 테스트
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+              </>
+            )}
+          </Button>
+          
+          <Button
+            onClick={onRestart}
+            variant="outline"
+            size="lg"
+            className="border-2 border-gray-400 text-gray-600 hover:bg-gray-100 font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105"
+          >
+            <RotateCcw className="mr-2 h-5 w-5" />
+            다시하기
+          </Button>
+        </motion.div>
       </motion.div>
-    </section>
+    </div>
   );
 }

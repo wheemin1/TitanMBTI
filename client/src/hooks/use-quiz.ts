@@ -1,7 +1,8 @@
+
 import { useState, useCallback } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
 import { questions } from "@/data/questions";
+import { calculateMBTI } from "@/utils/mbti-calculator";
+import { getCharacterMatch } from "@/data/mbti-characters";
 
 interface QuizResult {
   mbtiType: string;
@@ -30,20 +31,11 @@ export function useQuiz() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<(number | undefined)[]>(new Array(questions.length).fill(undefined));
   const [result, setResult] = useState<QuizResult | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const generateSessionId = () => {
     return Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
   };
-
-  const submitMutation = useMutation({
-    mutationFn: async (data: { answers: number[]; sessionId: string }) => {
-      const response = await apiRequest("POST", "/api/quiz/submit", data);
-      return response.json();
-    },
-    onSuccess: (data) => {
-      setResult(data);
-    },
-  });
 
   const selectAnswer = useCallback((questionIndex: number, value: number) => {
     setAnswers(prev => {
@@ -89,22 +81,46 @@ export function useQuiz() {
       return alert("모든 질문에 답해주세요.");
     }
 
-    const sessionId = generateSessionId();
+    setIsSubmitting(true);
+
     try {
-        await submitMutation.mutateAsync({
-            answers: completeAnswers,
-            sessionId
-        });
+      // Calculate MBTI locally
+      const { scores, mbtiType } = calculateMBTI(completeAnswers);
+      
+      // Get character match
+      const characterMatch = getCharacterMatch(mbtiType);
+      
+      const sessionId = generateSessionId();
+      
+      const quizResult: QuizResult = {
+        mbtiType,
+        scores,
+        character: characterMatch,
+        sessionId
+      };
+
+      // Save to localStorage
+      localStorage.setItem('aot-mbti-result', JSON.stringify({
+        ...quizResult,
+        answers: completeAnswers,
+        completedAt: new Date().toISOString()
+      }));
+
+      setResult(quizResult);
     } catch (error) {
-        console.error("Failed to submit quiz:", error);
-        alert("퀴즈 제출에 실패했습니다.");
+      console.error("Failed to process quiz:", error);
+      alert("퀴즈 처리에 실패했습니다.");
+    } finally {
+      setIsSubmitting(false);
     }
-  }, [answers, submitMutation]);
+  }, [answers]);
 
   const resetQuiz = useCallback(() => {
     setCurrentQuestion(0);
     setAnswers(new Array(questions.length).fill(undefined));
     setResult(null);
+    // Clear localStorage
+    localStorage.removeItem('aot-mbti-result');
   }, []);
 
   const getProgress = useCallback(() => {
@@ -126,7 +142,7 @@ export function useQuiz() {
     submitQuiz,
     resetQuiz,
     getProgress,
-    isSubmitting: submitMutation.isPending,
-    submitError: submitMutation.error,
+    isSubmitting,
+    submitError: null,
   };
 }

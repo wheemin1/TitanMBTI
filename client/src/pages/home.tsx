@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { StartScreen } from "@/components/quiz/start-screen";
 import { QuestionCard } from "@/components/quiz/question-card";
@@ -92,27 +93,24 @@ export default function Home() {
               {answers.filter(answer => answer !== undefined).length === questions.length && (
                 <div id="submit-section" className="text-center pt-12 pb-16 bg-gradient-to-r from-aot-green/10 to-aot-teal/10 rounded-2xl border-2 border-aot-green/20 mx-4">
                   <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                    🎉 모든 질문을 완료했습니다!
+                    🎉 모든 질문 완료!
                   </h3>
                   <p className="text-gray-600 mb-8 text-lg">
-                    이제 당신의 성격을 분석해보세요
+                    당신의 진격의 거인 캐릭터를 분석해드리겠습니다
                   </p>
-                  <Button
+                  <Button 
                     onClick={handleSubmit}
                     disabled={isSubmitting}
-                    className="bg-gradient-to-r from-aot-green to-aot-teal hover:from-aot-green/90 hover:to-aot-teal/90 text-white font-bold py-6 px-12 rounded-2xl text-2xl transition-all duration-300 transform hover:scale-105 shadow-xl"
                     size="lg"
+                    className="bg-gradient-to-r from-aot-green to-aot-teal hover:from-aot-green/90 hover:to-aot-teal/90 text-white font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
                   >
                     {isSubmitting ? (
-                      <div className="flex items-center space-x-3">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-3 border-white"></div>
-                        <span>분석 중...</span>
-                      </div>
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                        분석 중...
+                      </>
                     ) : (
-                      <div className="flex items-center space-x-3">
-                        <span>🔍</span>
-                        <span>성격 분석하기</span>
-                      </div>
+                      '🔍 성격 분석하기'
                     )}
                   </Button>
                 </div>
@@ -122,10 +120,9 @@ export default function Home() {
         )}
         
         {currentScreen === 'results' && result && (
-          <ResultsScreen
-            result={result}
+          <ResultsScreen 
+            result={result} 
             onRestart={handleRestart}
-            isLoading={isSubmitting}
           />
         )}
       </main>
