@@ -1,0 +1,46 @@
+~/workspace$ pwd
+/home/runner/workspace
+~/workspace$ git status
+On branch main
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+    modified:   client/package.json
+
+no changes added to commit (use "git add" and/or "git commit -a")
+~/workspace$ ^[[200~cd client && git add package.json
+cd client && git add package.jsonbash: cd: command not found
+~/workspace$ git commit -m "Update package.json with changes"~
+fatal: Unable to create '/home/runner/workspace/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+~/workspace$ rm -f /home/runner/workspace/.git/index.lock
+~/workspace$ cd client
+git add package.json
+git commit -m "Update package.json with changes"
+[main 2a1f245] Update package.json with changes
+ 1 file changed, 1 deletion(-)
+~/workspace/client$ git push origin main
+fatal: 'origin' does not appear to be a git repository
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+~/workspace/client$ cd client
+bash: cd: client: No such file or directory
+~/workspace/client$ ls
+index.html    package.json       README.md           tsconfig.json
+netlify.toml  postcss.config.js  src                 tsconfig.node.json
+node_modules  public             tailwind.config.ts  vite.config.ts
+~/workspace/client$ git remote -v
+~/workspace/client$ git remote add origin https://github.com/wheemin1/TitanMBTI.git
+error: could not lock config file .git/config: File exists
+fatal: could not set 'remote.origin.url' to 'https://github.com/wheemin1/TitanMBTI.git'
+~/workspace/client$ rm -f .git/config.lock
+~/workspace/client$ git remote add origin https://github.com/wheemin1/TitanMBTI.git
+error: could not lock config file .git/config: File exists
+fatal: could not set 'remote.origin.url' to 'https://github.com/wheemin1/TitanMBTI.git'
