@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -40,7 +39,7 @@ export function ResultsScreen({ result, onRestart }: ResultsScreenProps) {
   const handleShare = async () => {
     const shareUrl = window.location.origin;
     const shareText = `나는 ${result.character.name} (${result.mbtiType}) 타입이야! 🎯\n\n"${result.character.title}"\n\n진격의 거인 MBTI 테스트 해보기 👇`;
-    
+
     if (navigator.share) {
       try {
         await navigator.share({
@@ -61,7 +60,7 @@ export function ResultsScreen({ result, onRestart }: ResultsScreenProps) {
     try {
       const shareUrl = window.location.origin;
       const shareText = `나는 ${result.character.name} (${result.mbtiType}) 타입이야! 🎯\n\n"${result.character.title}"\n\n진격의 거인 MBTI 테스트 해보기 👇\n${shareUrl}`;
-      
+
       await navigator.clipboard.writeText(shareText);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -135,7 +134,7 @@ export function ResultsScreen({ result, onRestart }: ResultsScreenProps) {
                       </Badge>
                     </div>
                   </div>
-                  
+
                   <div className="flex-1 text-center md:text-left">
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
                       {result.character.name}
@@ -146,7 +145,7 @@ export function ResultsScreen({ result, onRestart }: ResultsScreenProps) {
                     <p className="text-gray-700 text-lg leading-relaxed mb-6">
                       {result.character.description}
                     </p>
-                    
+
                     {/* Traits */}
                     <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                       {result.character.traits.map((trait, index) => (
@@ -204,7 +203,7 @@ export function ResultsScreen({ result, onRestart }: ResultsScreenProps) {
                     ></div>
                   </div>
                 </div>
-                
+
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <span className="font-semibold">직관성 (N)</span>
@@ -217,7 +216,7 @@ export function ResultsScreen({ result, onRestart }: ResultsScreenProps) {
                     ></div>
                   </div>
                 </div>
-                
+
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <span className="font-semibold">감정형 (F)</span>
@@ -230,7 +229,7 @@ export function ResultsScreen({ result, onRestart }: ResultsScreenProps) {
                     ></div>
                   </div>
                 </div>
-                
+
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <span className="font-semibold">인식형 (P)</span>
@@ -263,7 +262,7 @@ export function ResultsScreen({ result, onRestart }: ResultsScreenProps) {
             <Share2 className="mr-2 h-5 w-5" />
             결과 공유하기
           </Button>
-          
+
           <Button
             onClick={handleCopyUrl}
             variant="outline"
@@ -282,7 +281,7 @@ export function ResultsScreen({ result, onRestart }: ResultsScreenProps) {
               </>
             )}
           </Button>
-          
+
           <Button
             onClick={onRestart}
             variant="outline"
