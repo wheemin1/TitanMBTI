@@ -1,4 +1,3 @@
-import type { Character } from '../types/character';
 import { characterImages } from './character-images';
 
 export interface Character {

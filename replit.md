@@ -10,28 +10,23 @@ Preferred communication style: Simple, everyday language.
 
 ## System Architecture
 
-### Frontend Architecture
-- **Framework**: React with TypeScript
+### Frontend-Only Architecture (Deployment Ready)
+- **Framework**: React 18 with TypeScript
 - **Build Tool**: Vite for fast development and optimized builds
 - **UI Framework**: Shadcn/UI components built on Radix UI primitives
 - **Styling**: Tailwind CSS with custom Attack on Titan theme variables
-- **State Management**: React hooks with TanStack Query for server state
+- **State Management**: React hooks with local storage (no backend required)
 - **Routing**: Wouter for lightweight client-side routing
 - **Animations**: Framer Motion for smooth transitions and scroll effects
+- **Storage**: Local Storage for quiz results persistence
 
-### Backend Architecture
-- **Runtime**: Node.js with Express.js
-- **Language**: TypeScript with ES modules
-- **Database**: PostgreSQL with Drizzle ORM
-- **Database Provider**: Neon Database (serverless PostgreSQL)
-- **API Design**: RESTful endpoints with JSON responses
-- **Validation**: Zod schemas for request/response validation
-
-### Development Architecture
-- **Monorepo Structure**: Shared code between client and server
-- **Development Server**: Vite dev server with HMR
-- **Build Process**: Separate builds for client (Vite) and server (esbuild)
-- **Type Safety**: Strict TypeScript configuration across all packages
+### Deployment Architecture
+- **Static Site**: Frontend-only application (no backend/database)
+- **Build Process**: Single Vite build for production
+- **Hosting**: Netlify with automatic GitHub deployment
+- **Repository**: https://github.com/wheemin1/TitanMBTI.git
+- **SPA Support**: _redirects file for client-side routing
+- **Type Safety**: Strict TypeScript configuration
 
 ## Key Components
 
