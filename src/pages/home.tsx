@@ -48,7 +48,15 @@ export default function Home() {
   const handleSubmit = async () => {
     try {
       await submitQuiz();
-      setCurrentScreen('results');
+      // 결과 화면으로 전환하기 전에 짧은 지연 추가
+      setTimeout(() => {
+        setCurrentScreen('results');
+        // 결과 화면으로 스크롤
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      }, 300);
     } catch (error) {
       console.error('Error submitting quiz:', error);
     }

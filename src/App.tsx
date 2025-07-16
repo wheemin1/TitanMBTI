@@ -1,4 +1,4 @@
-import { Route, Router } from "wouter";
+import { Route, Router, Switch } from "wouter";
 import Home from "@/pages/home";
 import NotFound from "@/pages/not-found";
 import { Toaster } from "@/components/ui/toaster";
@@ -6,9 +6,11 @@ import { Toaster } from "@/components/ui/toaster";
 function App() {
   return (
     <>
-      <Router>
-        <Route path="/" component={Home} />
-        <Route component={NotFound} />
+      <Router base="">
+        <Switch>
+          <Route path="/" component={Home} />
+          <Route component={NotFound} />
+        </Switch>
       </Router>
       <Toaster />
     </>

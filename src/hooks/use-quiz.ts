@@ -99,17 +99,22 @@ export function useQuiz() {
         sessionId
       };
 
-      // Save to localStorage
+      // Save to localStorage for persistence between page refreshes
       localStorage.setItem('aot-mbti-result', JSON.stringify({
         ...quizResult,
         answers: completeAnswers,
         completedAt: new Date().toISOString()
       }));
 
+      // 약간의 지연 추가
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       setResult(quizResult);
+      return quizResult;
     } catch (error) {
       console.error("Failed to process quiz:", error);
       alert("퀴즈 처리에 실패했습니다.");
+      throw error;
     } finally {
       setIsSubmitting(false);
     }

@@ -13,6 +13,15 @@ export default defineConfig({
   build: {
     outDir: "dist",
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          wouter: ['wouter'],
+          framer: ['framer-motion'],
+        }
+      }
+    }
   },
   server: {
     port: 5173,
