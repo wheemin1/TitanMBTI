@@ -72,12 +72,16 @@ export function ResultsScreen({ result, onRestart }: ResultsScreenProps) {
   const getPercentage = (type: 'energy' | 'information' | 'decisions' | 'lifestyle') => {
     switch (type) {
       case 'energy':
+        // E가 높으면 높은 퍼센트, I가 높으면 낮은 퍼센트
         return Math.round((result.scores.E / (result.scores.E + result.scores.I)) * 100);
       case 'information':
+        // N이 높으면 높은 퍼센트, S가 높으면 낮은 퍼센트
         return Math.round((result.scores.N / (result.scores.S + result.scores.N)) * 100);
       case 'decisions':
+        // F가 높으면 높은 퍼센트, T가 높으면 낮은 퍼센트
         return Math.round((result.scores.F / (result.scores.T + result.scores.F)) * 100);
       case 'lifestyle':
+        // P가 높으면 높은 퍼센트, J가 높으면 낮은 퍼센트
         return Math.round((result.scores.P / (result.scores.J + result.scores.P)) * 100);
       default:
         return 50;
@@ -193,52 +197,60 @@ export function ResultsScreen({ result, onRestart }: ResultsScreenProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="font-semibold">외향성 (E)</span>
-                    <span className="text-aot-teal font-bold">{getPercentage('energy')}%</span>
+                    <span className="font-semibold">외향성 (E) vs 내향성 (I)</span>
+                    <span className="text-aot-teal font-bold">
+                      {result.mbtiType.charAt(0) === 'E' ? 'E' : 'I'} {result.mbtiType.charAt(0) === 'E' ? getPercentage('energy') : 100 - getPercentage('energy')}%
+                    </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-3">
                     <div 
                       className="bg-gradient-to-r from-aot-green to-aot-teal h-3 rounded-full transition-all duration-1000"
-                      style={{ width: `${getPercentage('energy')}%` }}
+                      style={{ width: `${result.mbtiType.charAt(0) === 'E' ? getPercentage('energy') : 100 - getPercentage('energy')}%` }}
                     ></div>
                   </div>
                 </div>
 
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="font-semibold">직관성 (N)</span>
-                    <span className="text-aot-teal font-bold">{getPercentage('information')}%</span>
+                    <span className="font-semibold">직관형 (N) vs 감각형 (S)</span>
+                    <span className="text-aot-teal font-bold">
+                      {result.mbtiType.charAt(1) === 'N' ? 'N' : 'S'} {result.mbtiType.charAt(1) === 'N' ? getPercentage('information') : 100 - getPercentage('information')}%
+                    </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-3">
                     <div 
                       className="bg-gradient-to-r from-aot-green to-aot-teal h-3 rounded-full transition-all duration-1000"
-                      style={{ width: `${getPercentage('information')}%` }}
+                      style={{ width: `${result.mbtiType.charAt(1) === 'N' ? getPercentage('information') : 100 - getPercentage('information')}%` }}
                     ></div>
                   </div>
                 </div>
 
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="font-semibold">감정형 (F)</span>
-                    <span className="text-aot-teal font-bold">{getPercentage('decisions')}%</span>
+                    <span className="font-semibold">감정형 (F) vs 사고형 (T)</span>
+                    <span className="text-aot-teal font-bold">
+                      {result.mbtiType.charAt(2) === 'F' ? 'F' : 'T'} {result.mbtiType.charAt(2) === 'F' ? getPercentage('decisions') : 100 - getPercentage('decisions')}%
+                    </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-3">
                     <div 
                       className="bg-gradient-to-r from-aot-green to-aot-teal h-3 rounded-full transition-all duration-1000"
-                      style={{ width: `${getPercentage('decisions')}%` }}
+                      style={{ width: `${result.mbtiType.charAt(2) === 'F' ? getPercentage('decisions') : 100 - getPercentage('decisions')}%` }}
                     ></div>
                   </div>
                 </div>
 
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="font-semibold">인식형 (P)</span>
-                    <span className="text-aot-teal font-bold">{getPercentage('lifestyle')}%</span>
+                    <span className="font-semibold">인식형 (P) vs 판단형 (J)</span>
+                    <span className="text-aot-teal font-bold">
+                      {result.mbtiType.charAt(3) === 'P' ? 'P' : 'J'} {result.mbtiType.charAt(3) === 'P' ? getPercentage('lifestyle') : 100 - getPercentage('lifestyle')}%
+                    </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-3">
                     <div 
                       className="bg-gradient-to-r from-aot-green to-aot-teal h-3 rounded-full transition-all duration-1000"
-                      style={{ width: `${getPercentage('lifestyle')}%` }}
+                      style={{ width: `${result.mbtiType.charAt(3) === 'P' ? getPercentage('lifestyle') : 100 - getPercentage('lifestyle')}%` }}
                     ></div>
                   </div>
                 </div>
