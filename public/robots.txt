@@ -5,7 +5,7 @@ Allow: /
 Disallow:
 
 # Sitemap location
-Sitemap: https://titanmbti.netlify.app/sitemap.xml
+Sitemap: https://titanmbti33.netlify.app/sitemap.xml
 
 # Common crawlers
 User-agent: Googlebot

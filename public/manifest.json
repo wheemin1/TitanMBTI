@@ -1,0 +1,27 @@
+{
+  "name": "진격의 거인 MBTI 테스트",
+  "short_name": "진격거 MBTI",
+  "description": "진격의 거인 캐릭터와 성격을 비교하는 무료 MBTI 성격검사",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f5f5",
+  "theme_color": "#2d5016",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "ko-KR",
+  "categories": ["entertainment", "education", "lifestyle"],
+  "icons": [
+    {
+      "src": "/images/characters/estp.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/characters/estp.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
